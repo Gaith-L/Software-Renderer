@@ -11,7 +11,22 @@ BUFFER_HEIGHT :: 800
 t2dPixelBuffer :: [BUFFER_HEIGHT][BUFFER_WIDTH]rl.Color
 
 tPixelBuffer :: struct {
-	pixels: ^t2dPixelBuffer,
+	pixels: [BUFFER_HEIGHT][BUFFER_WIDTH]rl.Color,
 	width:  int,
 	height: int,
+}
+
+program_state :: struct {
+	cube : Cube
+}
+
+// Shapes ---------------------------->
+IndexedLines :: struct {
+	vertices: []rl.Vector3,
+	indices:  []u32,
+}
+
+Cube :: struct {
+	size:     f32,
+	vertices: [8]rl.Vector3,
 }

@@ -1,19 +1,9 @@
 package shapes
 
-import "../types"
+import t "../types"
 import rl "vendor:raylib"
 
-IndexedLines :: struct {
-	vertices: []rl.Vector3,
-	indices:  []u32,
-}
-
-Cube :: struct {
-	size:     f32,
-	vertices: [8]rl.Vector3,
-}
-
-make_cube :: proc(size: f32) -> Cube {
+make_cube :: proc(size: f32) -> t.Cube {
 	s := size / 2
 
 	// v: [8]rl.Vector3 = {
@@ -40,10 +30,10 @@ make_cube :: proc(size: f32) -> Cube {
 		{-s2, s2, s2},   //7
 	}
 
-	return Cube{size = size, vertices = v}
+	return t.Cube{size = size, vertices = v}
 }
 
-get_cube_lines :: proc(cube: ^Cube) -> IndexedLines {
+get_cube_lines :: proc(cube: ^t.Cube) -> t.IndexedLines {
     vertices := make([]rl.Vector3, 8) // Length = 8
     copy(vertices, cube.vertices[:])
 
@@ -68,7 +58,7 @@ get_cube_lines :: proc(cube: ^Cube) -> IndexedLines {
         3,7,
     }
     copy(indices, edge_indices[:])
-	return IndexedLines{
+	return t.IndexedLines{
         vertices, indices
     }
 }

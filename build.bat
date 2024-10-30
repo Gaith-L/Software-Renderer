@@ -7,4 +7,3 @@ if %ERRORLEVEL% EQU 0 (
     echo Build failed with error code %ERRORLEVEL%
 )
 @REM pause
-

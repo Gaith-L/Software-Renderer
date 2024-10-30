@@ -1,17 +1,18 @@
 package renderer
 
 import "../shapes"
-import "../types"
+import t "../types"
+import "base:runtime"
 import "core:fmt"
 import rl "vendor:raylib"
 
-draw_pixel :: proc(buffer: ^types.tPixelBuffer, x, y: int) {
+draw_pixel :: proc(buffer: ^t.tPixelBuffer, x, y: int) {
 	if x >= 0 && x < buffer.width && y >= 0 && y < buffer.height {
 		buffer.pixels[y][x] = rl.RED
 	}
 }
 
-draw_line :: proc(buffer: ^types.tPixelBuffer, x0, y0, x1, y1: int) {
+draw_line :: proc(buffer: ^t.tPixelBuffer, x0, y0, x1, y1: int) {
 	dx := abs(x1 - x0)
 	dy := abs(y1 - y0)
 
@@ -37,7 +38,7 @@ draw_line :: proc(buffer: ^types.tPixelBuffer, x0, y0, x1, y1: int) {
 	}
 }
 
-draw_square :: proc(buffer: ^types.tPixelBuffer, x, y, size: int) {
+draw_square :: proc(buffer: ^t.tPixelBuffer, x, y, size: int) {
 	start_x := x - size / 2
 	start_y := y - size / 2
 
@@ -50,7 +51,7 @@ draw_square :: proc(buffer: ^types.tPixelBuffer, x, y, size: int) {
 	}
 }
 
-draw_cube_lines :: proc(buffer: ^types.tPixelBuffer, lines: shapes.IndexedLines) {
+draw_cube_lines :: proc(buffer: ^t.tPixelBuffer, lines: t.IndexedLines) {
 	for i := 0; i < len(lines.indices); i += 2 {
 		draw_line(
 			buffer,
@@ -62,12 +63,23 @@ draw_cube_lines :: proc(buffer: ^types.tPixelBuffer, lines: shapes.IndexedLines)
 	}
 }
 
-render :: proc(buffer: ^types.tPixelBuffer) {
-	cube := shapes.make_cube(1)
-	cube_lines := shapes.get_cube_lines(&cube)
+clear_buffer :: proc(buffer: ^t.tPixelBuffer) {
+
+}
+
+cube := shapes.make_cube(1)
+cube_lines : t.IndexedLines = shapes.get_cube_lines(&cube)
+render :: proc(buffer: ^t.tPixelBuffer) {
+	@(static) angle: f32 = 0.0
+	angle = 0.00005
+
+	cube_lines : t.IndexedLines = shapes.get_cube_lines(&cube)
+
 	for &v in cube.vertices {
-		scaled_v := _3d_to_screen(v)
-		draw_pixel(buffer, int(scaled_v.x), int(scaled_v.y))
+		v.xy = rl.Vector2Rotate({v.x, v.y}, angle) // SPIN THE CUBE
+		scaled_v := _3d_to_screen({v.x, v.y, v.z + 1})
+
+		// draw_pixel(buffer, int(scaled_v.x), int(scaled_v.y)) // NOTE: Drawing the pixel at the vertex does weird thing
 	}
-    draw_cube_lines(buffer, cube_lines)
+	draw_cube_lines(buffer, cube_lines)
 }
