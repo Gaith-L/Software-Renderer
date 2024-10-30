@@ -12,7 +12,7 @@ A simple software renderer implementation using Odin and Raylib (minimal library
 1. Clone this repository
 2. Run the build script:
 ```bash
-cd Software
+cd Software-Renderer
 build.bat
 ```
 
