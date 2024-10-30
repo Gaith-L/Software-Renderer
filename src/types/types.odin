@@ -2,6 +2,9 @@ package types
 
 import rl "vendor:raylib"
 
+v2 :: rl.Vector2
+v3 :: rl.Vector3
+
 BUFFER_WIDTH :: 800
 BUFFER_HEIGHT :: 800
 

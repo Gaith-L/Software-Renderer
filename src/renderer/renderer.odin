@@ -1,5 +1,6 @@
 package renderer
 
+import "../shapes"
 import "../types"
 import "core:fmt"
 import rl "vendor:raylib"
@@ -49,8 +50,24 @@ draw_square :: proc(buffer: ^types.tPixelBuffer, x, y, size: int) {
 	}
 }
 
+draw_cube_lines :: proc(buffer: ^types.tPixelBuffer, lines: shapes.IndexedLines) {
+	for i := 0; i < len(lines.indices); i += 2 {
+		draw_line(
+			buffer,
+			int(_3d_to_screen(lines.vertices[lines.indices[i]]).x),
+			int(_3d_to_screen(lines.vertices[lines.indices[i]]).y),
+			int(_3d_to_screen(lines.vertices[lines.indices[i + 1]]).x),
+			int(_3d_to_screen(lines.vertices[lines.indices[i + 1]]).y),
+		)
+	}
+}
+
 render :: proc(buffer: ^types.tPixelBuffer) {
-    guh_3d : rl.Vector3 = {.99,-0.99,0.0}
-    guh_screen := _3d_to_screen(&guh_3d)
-	draw_pixel(buffer, int(guh_screen.x), int(guh_screen.y))
+	cube := shapes.make_cube(1)
+	cube_lines := shapes.get_cube_lines(&cube)
+	for &v in cube.vertices {
+		scaled_v := _3d_to_screen(v)
+		draw_pixel(buffer, int(scaled_v.x), int(scaled_v.y))
+	}
+    draw_cube_lines(buffer, cube_lines)
 }
